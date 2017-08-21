@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/MineProjectZ/leychess-server/issues"
   },
-  "homepage": "https://github.com/MineProjectZ/leychess-server#readme"
+  "homepage": "https://github.com/MineProjectZ/leychess-server#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "leychess-jocly": "0.0.1",
+    "socket.io": "^2.0.3"
+  }
 }
