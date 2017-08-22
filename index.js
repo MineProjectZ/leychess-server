@@ -33,12 +33,18 @@ function RunMatch(match) {
 
             .then( (result) => {
                 if(result.finished) {
-                    if(result.winner==Jocly.PLAYER_A)
-                        console.info("Player A wins");
-                    else if(result.winner==Jocly.PLAYER_B)
-                        console.info("Player B wins");
-                    else if(result.winner==Jocly.DRAW)
-                        console.info("Draw");
+                    if(result.winner==Jocly.PLAYER_A){
+                        var winner = 'Player A Wins';
+                        io.emit('winner', winner);
+                    }
+                    else if(result.winner==Jocly.PLAYER_B){
+                        var winner = 'Player B Wins'
+                        io.emit('winner', winner);
+                    }
+                    else if(result.winner==Jocly.DRAW){
+                        var winner = 'Draw'
+                        io.emit('winner', winner);
+                    }
                 } else
                     NextMove();
             })
@@ -47,14 +53,9 @@ function RunMatch(match) {
               return match.getBoardState();
             })
             .then( (boardState)=> {
-              console.info(boardState);
-            })
-            .then( (boardState)=> {
-             io.on('connection', function(socket, boardState){
-           socket.on('fendata', function(boardState){
-           io.send('fendata', boardState);
-        });
-      });
+            var fen;
+             fen = boardState;
+            io.emit('fendata', fen);
             })
             .catch( (e) => {
                 console.info("Error",e);
@@ -65,13 +66,12 @@ function RunMatch(match) {
     }
     NextMove();
 }
-
-
-
-Jocly.createMatch("classic-chess")
-    .then((match)=>{
-        RunMatch(match);
-    })
-    .catch((e)=>{
-        console.info("Error creating match",e);                
-    });
+    
+io.on('connection', function(socket){
+    socket.on('start', function(begin){
+        Jocly.createMatch("classic-chess")
+        .then((match)=>{
+            RunMatch(match);
+        })
+    });   
+});

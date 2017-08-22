@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/chessboard-0.3.0.css" />
+</head>
+<body>
+<div id="board" style="width: 400px"></div>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/chessboard-0.3.0.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var fen;
+   $(function (fen) {
+    var socket = io('localhost:3000');
+    socket.on('fendata', function(boardState){
+      console.log(fen);
+      fen = boardState;
+      var init = function() {
+
+
+  var cfg = {
+  position: fen
+};
+var board = ChessBoard('board', cfg);
+
+
+}; 
+$(document).ready(init);
+    });
+  });
+
+</script>
+<script>
+var socket = io('localhost:3000');
+socket.on('winner', function(winner){
+alert(winner);
+});
+</script>
+<button onclick="startGame(socket, begin)">Start Game</button>
+<script>
+  var socket = io('localhost:3000');
+  var begin = true;
+    function startGame(socket, begin) {
+        socket.emit('start', begin);
+        console.log('Start');
+    }
+    </script>
+</body>
+</html>
